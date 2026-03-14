@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PerplexiCode — Demo</title>
+  <meta name="description" content="PerplexiCode: Perplexity AI-powered coding agent for VS Code with multi-account support">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- ─── Landing Hero ─── -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+      <div class="glow glow-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+
+    <nav class="navbar">
+      <div class="nav-brand">
+        <span class="nav-icon">✦</span>
+        <span class="nav-name">PerplexiCode</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#demo">Live Demo</a>
+        <a href="#accounts">Accounts</a>
+        <button class="nav-cta" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try Demo</button>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-badge">VS Code Extension</div>
+      <h1 class="hero-title">
+        <span class="gradient-text">Perplexity AI</span><br>
+        Inside Your Editor
+      </h1>
+      <p class="hero-subtitle">
+        An autonomous AI coding agent powered by your Perplexity account — with real-time web search, 
+        multi-account rotation, and file-aware context. No API keys needed.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+          <span>✦</span> Try Live Demo
+        </button>
+        <button class="btn btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+          Learn More →
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value">13</span>
+          <span class="stat-label">AI Models</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">∞</span>
+          <span class="stat-label">Multi-Account</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">0</span>
+          <span class="stat-label">API Keys Needed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Features ─── -->
+  <section class="features" id="features">
+    <h2 class="section-title">Why <span class="gradient-text">PerplexiCode</span></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔑</div>
+        <h3>No API Keys</h3>
+        <p>Use your regular Perplexity account — free or Pro. Just log in once and start coding with AI.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Multi-Account Rotation</h3>
+        <p>Add unlimited accounts. Queries rotate automatically with round-robin, least-used, or failover strategies.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Real-Time Web Search</h3>
+        <p>Every response includes live web context and cited sources — no stale training data.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <h3>File-Aware Context</h3>
+        <p>Automatically includes your current file, selection, and project structure in every query.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>13 AI Models</h3>
+        <p>GPT-5.2, Claude 4.6, Gemini 3, Grok 4.1, Sonar Reasoning, Deep Research — all in one place.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Auto-Failover</h3>
+        <p>If one account hits limits, instantly retries on the next. Zero downtime for your workflow.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Interactive Demo ─── -->
+  <section class="demo-section" id="demo">
+    <h2 class="section-title">Live <span class="gradient-text">Demo</span></h2>
+    <p class="section-subtitle">Try the PerplexiCode chat experience — simulated responses show how it works in VS Code</p>
+    
+    <div class="demo-container">
+      <!-- VS Code Frame -->
+      <div class="vscode-frame">
+        <div class="vscode-titlebar">
+          <div class="traffic-lights">
+            <span class="dot dot-close"></span>
+            <span class="dot dot-minimize"></span>
+            <span class="dot dot-maximize"></span>
+          </div>
+          <span class="vscode-title">PerplexiCode — Visual Studio Code</span>
+          <div class="traffic-lights" style="visibility:hidden">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+        </div>
+
+        <div class="vscode-body">
+          <!-- Activity Bar -->
+          <div class="activity-bar">
+            <div class="activity-icon active" title="PerplexiCode">✦</div>
+            <div class="activity-icon" title="Explorer">📁</div>
+            <div class="activity-icon" title="Search">🔍</div>
+            <div class="activity-icon" title="Git">⑂</div>
+            <div class="activity-icon" title="Extensions">⧉</div>
+          </div>
+
+          <!-- Sidebar: Chat Panel -->
+          <div class="sidebar-panel">
+            <!-- Header -->
+            <div class="chat-header">
+              <div class="header-left">
+                <span class="logo-icon">✦</span>
+                <span class="header-title">PerplexiCode</span>
+              </div>
+              <div class="header-right">
+                <select id="model-selector" class="model-selector">
+                  <optgroup label="Search">
+                    <option value="turbo" selected>Turbo</option>
+                    <option value="sonar">Sonar</option>
+                    <option value="gemini-3-flash">Gemini 3 Flash</option>
+                    <option value="gpt-5.2">GPT-5.2</option>
+                    <option value="claude-4.6-sonnet">Claude 4.6 Sonnet</option>
+                    <option value="grok-4.1">Grok 4.1</option>
+                  </optgroup>
+                  <optgroup label="Reasoning">
+                    <option value="sonar-reasoning">Sonar Reasoning</option>
+                    <option value="gemini-3-flash-thinking">Gemini 3 Flash Thinking</option>
+                    <option value="gpt-5.2-thinking">GPT-5.2 Thinking</option>
+                    <option value="claude-4.6-sonnet-thinking">Claude 4.6 Sonnet Thinking</option>
+                  </optgroup>
+                  <optgroup label="Research">
+                    <option value="sonar-deep-research">Deep Research</option>
+                  </optgroup>
+                </select>
+                <button class="icon-btn" id="new-chat-btn" title="New conversation">+</button>
+              </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages-container" id="messages-container">
+              <div class="welcome-screen" id="welcome-screen">
+                <div class="welcome-icon">✦</div>
+                <h2>Welcome to PerplexiCode</h2>
+                <p>AI-powered coding assistant using your Perplexity account</p>
+                <div class="quick-actions">
+                  <button class="quick-action-btn" data-action="Explain error: TypeError: Cannot read properties of undefined (reading 'map')">
+                    <span class="qa-icon">🐛</span><span>Debug error</span>
+                  </button>
+                  <button class="quick-action-btn" data-action="Write a React hook for debounced search with TypeScript">
+                    <span class="qa-icon">⚛️</span><span>React hook</span>
+                  </button>
+                  <button class="quick-action-btn" data-action="What's the best way to handle authentication in Next.js 15?">
+                    <span class="qa-icon">🔐</span><span>Auth patterns</span>
+                  </button>
+                  <button class="quick-action-btn" data-action="Optimize this SQL query for better performance">
+                    <span class="qa-icon">🗄️</span><span>SQL optimize</span>
+                  </button>
+                </div>
+              </div>
+              <div class="messages-list" id="messages-list"></div>
+            </div>
+
+            <!-- Input -->
+            <div class="input-container">
+              <div class="input-wrapper">
+                <textarea id="message-input" class="message-input" placeholder="Ask PerplexiCode anything..." rows="1"></textarea>
+                <button id="send-btn" class="send-btn" title="Send message">
+                  <span id="send-icon">➤</span>
+                </button>
+              </div>
+              <div class="input-footer">
+                <span class="account-indicator" id="account-indicator">2/3 accounts active</span>
+                <span class="powered-by">Powered by Perplexity</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editor Area -->
+          <div class="editor-area">
+            <div class="editor-tabs">
+              <div class="editor-tab active">
+                <span class="tab-icon">TS</span>
+                <span>app.ts</span>
+              </div>
+              <div class="editor-tab">
+                <span class="tab-icon">CSS</span>
+                <span>styles.css</span>
+              </div>
+            </div>
+            <div class="editor-content">
+              <div class="line-numbers" id="line-numbers"></div>
+              <pre class="code-editor" id="code-editor"></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="vscode-statusbar">
+          <div class="statusbar-left">
+            <span class="sb-item">⑂ main</span>
+            <span class="sb-item">0 errors</span>
+          </div>
+          <div class="statusbar-right">
+            <span class="sb-item" id="statusbar-model">✦ Turbo · 2/3</span>
+            <span class="sb-item">TypeScript</span>
+            <span class="sb-item">UTF-8</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Account Manager ─── -->
+  <section class="accounts-section" id="accounts">
+    <h2 class="section-title">Multi-Account <span class="gradient-text">Dashboard</span></h2>
+    <p class="section-subtitle">Manage multiple Perplexity accounts with real-time status and intelligent rotation</p>
+
+    <div class="accounts-dashboard">
+      <div class="dash-header">
+        <div class="dash-tabs">
+          <button class="dash-tab active" data-tab="accounts">Accounts</button>
+          <button class="dash-tab" data-tab="rotation">Rotation</button>
+        </div>
+        <button class="btn btn-sm btn-primary" id="add-account-btn">+ Add Account</button>
+      </div>
+
+      <div class="dash-content" id="dash-content">
+        <!-- Account cards -->
+        <div class="account-card">
+          <div class="account-header">
+            <div class="account-status status-active"></div>
+            <div class="account-info">
+              <span class="account-alias">Personal Pro</span>
+              <span class="account-meta">Active · 47 queries today</span>
+            </div>
+            <div class="account-actions">
+              <button class="btn-icon" title="Refresh session">🔄</button>
+              <button class="btn-icon" title="Disable">⏸</button>
+            </div>
+          </div>
+          <div class="account-bar-wrapper">
+            <div class="account-bar">
+              <div class="account-bar-fill" style="width: 35%"></div>
+            </div>
+            <span class="bar-label">35% daily limit</span>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-header">
+            <div class="account-status status-active"></div>
+            <div class="account-info">
+              <span class="account-alias">Work Account</span>
+              <span class="account-meta">Active · 23 queries today</span>
+            </div>
+            <div class="account-actions">
+              <button class="btn-icon" title="Refresh session">🔄</button>
+              <button class="btn-icon" title="Disable">⏸</button>
+            </div>
+          </div>
+          <div class="account-bar-wrapper">
+            <div class="account-bar">
+              <div class="account-bar-fill" style="width: 18%"></div>
+            </div>
+            <span class="bar-label">18% daily limit</span>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-header">
+            <div class="account-status status-ratelimited"></div>
+            <div class="account-info">
+              <span class="account-alias">Backup Free</span>
+              <span class="account-meta">Rate Limited · Cooldown: 45s</span>
+            </div>
+            <div class="account-actions">
+              <button class="btn-icon" title="Refresh session">🔄</button>
+              <button class="btn-icon" title="Enable">▶</button>
+            </div>
+          </div>
+          <div class="account-bar-wrapper">
+            <div class="account-bar">
+              <div class="account-bar-fill bar-warning" style="width: 92%"></div>
+            </div>
+            <span class="bar-label">92% daily limit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="nav-icon">✦</span>
+        <span>PerplexiCode</span>
+      </div>
+      <p class="footer-note">VS Code extension powered by Perplexity AI account sessions. No API keys. No rate limits.</p>
+    </div>
+  </footer>
+
+  <script src="demo.js"></script>
+</body>
+</html>

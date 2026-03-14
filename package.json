@@ -1,0 +1,153 @@
+{
+  "name": "perplexicode",
+  "displayName": "PerplexiCode",
+  "description": "Perplexity AI-powered coding agent for Visual Studio Code",
+  "version": "1.0.5",
+  "publisher": "perplexicode",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "perplexity",
+    "ai",
+    "coding-agent",
+    "sonar",
+    "search"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "icon": "media/icon.png",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "perplexicode-sidebar",
+          "title": "PerplexiCode",
+          "icon": "media/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "perplexicode-sidebar": [
+        {
+          "type": "webview",
+          "id": "perplexicode.chatView",
+          "name": "Chat"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "perplexicode.openChat",
+        "title": "PerplexiCode: Open Chat"
+      },
+      {
+        "command": "perplexicode.addAccount",
+        "title": "PerplexiCode: Add Account"
+      },
+      {
+        "command": "perplexicode.manageAccounts",
+        "title": "PerplexiCode: Manage Accounts"
+      },
+      {
+        "command": "perplexicode.selectModel",
+        "title": "PerplexiCode: Select Mode / Model"
+      },
+      {
+        "command": "perplexicode.setRotationStrategy",
+        "title": "PerplexiCode: Set Rotation Strategy"
+      },
+      {
+        "command": "perplexicode.askAboutSelection",
+        "title": "PerplexiCode: Ask About Selection"
+      },
+      {
+        "command": "perplexicode.askAboutFile",
+        "title": "PerplexiCode: Ask About Current File"
+      },
+      {
+        "command": "perplexicode.refreshModels",
+        "title": "PerplexiCode: Refresh Model List"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "perplexicode.askAboutSelection",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i",
+        "when": "editorTextFocus && editorHasSelection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "perplexicode.askAboutSelection",
+          "when": "editorHasSelection",
+          "group": "perplexicode@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "PerplexiCode",
+      "properties": {
+        "perplexicode.defaultModel": {
+          "type": "string",
+          "default": "turbo",
+          "enum": [
+            "turbo",
+            "experimental",
+            "gpt54",
+            "gemini31pro_high",
+            "claude46sonnet",
+            "nemotron_3_super",
+            "claude46opus"
+          ],
+          "description": "Default Perplexity AI model to use in the selector"
+        },
+        "perplexicode.maxContextTokens": {
+          "type": "number",
+          "default": 8000,
+          "description": "Maximum number of tokens to include in file context"
+        },
+        "perplexicode.excludePatterns": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.git/**",
+            "**/dist/**",
+            "**/out/**",
+            "**/.next/**"
+          ],
+          "description": "Glob patterns for files to exclude from context"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "package": "vsce package",
+    "lint": "tsc --noEmit",
+    "test:smoke": "node ./test/run-smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "highlight.js": "^11.9.0",
+    "marked": "^12.0.0",
+    "puppeteer-core": "^24.39.0",
+    "sql.js": "^1.14.1"
+  }
+}

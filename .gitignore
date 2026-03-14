@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+out/
+
+# Packaged extension
+*.vsix
+
+# Source maps
+*.map
+
+# VS Code test runner
+.vscode-test/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+.vscode/
+
+# Gemini/AI agent artifacts
+.gemini/
+.agents/

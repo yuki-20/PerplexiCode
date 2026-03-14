@@ -1,0 +1,13 @@
+.vscode/**
+.vscode-test/**
+src/**
+node_modules/.package-lock.json
+demo/**
+.gitignore
+.gemini/**
+tsconfig.json
+esbuild.js
+**/*.ts
+**/*.map
+task.md
+walkthrough.md

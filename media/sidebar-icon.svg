@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Sparkle / star shape representing AI -->
+  <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" />
+  <circle cx="19" cy="5" r="1" fill="currentColor" />
+  <circle cx="5" cy="19" r="1" fill="currentColor" />
+  <path d="M18 18L20 20" />
+  <path d="M4 4L6 6" />
+</svg>
