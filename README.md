@@ -48,14 +48,17 @@ Then install the generated `.vsix` via the method above.
 
 ## Getting Started
 
+> ⚠️ **IMPORTANT:** Currently, only the **Manual Paste** login method is working, and you must copy the cookies from **Microsoft Edge**. The "Import from Browser" and "Login in Browser" methods are not functional at this time.
+
 1. Install the extension
 2. Run **PerplexiCode: Add Account** from the Command Palette (`Ctrl+Shift+P`)
-3. Choose a login method:
-   - **Import from Browser** — Reads cookies directly from Chrome/Edge/Brave (browser must be closed)
-   - **Login in Browser** — Opens a Puppeteer-driven browser window for you to sign in
-   - **Manual Paste** — Copy-paste your full Cookie header from DevTools
-4. Click the **PerplexiCode** icon in the Activity Bar
-5. Start chatting!
+3. Select **Manual Paste**
+4. Open **Microsoft Edge** and go to [perplexity.ai](https://perplexity.ai) (make sure you're logged in)
+5. Press `F12` → **Network** tab → refresh the page
+6. Click any request → find **Request Headers → Cookie**
+7. Copy the entire Cookie value and paste it into the prompt
+8. Click the **PerplexiCode** icon in the Activity Bar
+9. Start chatting!
 
 > **Note:** No API key is required. The extension uses your existing Perplexity account session cookies, which are stored securely in VS Code's encrypted SecretStorage.
 
