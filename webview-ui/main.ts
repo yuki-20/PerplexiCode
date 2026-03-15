@@ -275,6 +275,46 @@ function handleExtensionMessage(event: MessageEvent): void {
       currentStreamTaskMode = '';
       updateSendButton();
       break;
+    case 'reviewOpened': {
+      const statusList = document.querySelector('.review-status-list:last-of-type');
+      if (statusList) {
+        const item = document.createElement('div');
+        item.className = 'review-status-item pending';
+        item.dataset.editId = message.editId;
+        item.innerHTML = `
+          <span class="review-file-name">${escapeHtml(message.filePath)}</span>
+          <span class="review-status-label">Reviewing...</span>
+          <div class="review-item-actions">
+            <button class="mini-btn accept-btn" data-edit-id="${escapeAttr(message.editId)}">Accept</button>
+            <button class="mini-btn danger reject-btn" data-edit-id="${escapeAttr(message.editId)}">Reject</button>
+          </div>
+        `;
+        item.querySelector('.accept-btn')?.addEventListener('click', () => {
+          vscode.postMessage({ type: 'acceptEdit', editId: message.editId });
+        });
+        item.querySelector('.reject-btn')?.addEventListener('click', () => {
+          vscode.postMessage({ type: 'rejectEdit', editId: message.editId });
+        });
+        statusList.appendChild(item);
+      }
+      break;
+    }
+    case 'reviewResult': {
+      const reviewItem = document.querySelector(`.review-status-item[data-edit-id="${message.editId}"]`);
+      if (reviewItem) {
+        reviewItem.classList.remove('pending');
+        reviewItem.classList.add(message.accepted ? 'accepted' : 'rejected');
+        const label = reviewItem.querySelector('.review-status-label');
+        if (label) {
+          label.textContent = message.accepted ? '✓ Applied' : '✗ Reverted';
+        }
+        const actions = reviewItem.querySelector('.review-item-actions');
+        if (actions) {
+          actions.remove();
+        }
+      }
+      break;
+    }
     case 'error':
       state.isStreaming = false;
       appendNotice('error', message.message);
@@ -823,11 +863,18 @@ function renderApplyCard(fileEdits: any[], appliedSummary?: { message: string })
         <div class="apply-title">Structured file output detected</div>
         <div class="apply-subtitle">${files}</div>
       </div>
-      <button class="solid-btn small">Apply to Files</button>
+      <div class="apply-btn-group">
+        <button class="outline-btn small review-btn">Review Changes</button>
+        <button class="solid-btn small">Apply to Files</button>
+      </div>
     </div>
     ${appliedSummary?.message ? `<div class="apply-summary">${escapeHtml(appliedSummary.message)}</div>` : ''}
+    <div class="review-status-list"></div>
   `;
-  wrapper.querySelector('button')?.addEventListener('click', () => {
+  wrapper.querySelector('.review-btn')?.addEventListener('click', () => {
+    vscode.postMessage({ type: 'reviewChanges', edits: fileEdits });
+  });
+  wrapper.querySelector('.solid-btn')?.addEventListener('click', () => {
     vscode.postMessage({ type: 'applyFiles', edits: fileEdits });
   });
   return wrapper;

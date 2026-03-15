@@ -54,6 +54,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
   private activeAbortController?: AbortController;
   private agentModeEnabled = false;
   private workspaceModeEnabled = true;
+  private pendingEdits = new Map<string, { edit: ParsedFileEdit; originalContent: string }>();
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -134,6 +135,15 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
           break;
         case 'applyFiles':
           await this._applyFileEdits(message.edits || [], false);
+          break;
+        case 'reviewChanges':
+          await this._reviewFileEdits(message.edits || []);
+          break;
+        case 'acceptEdit':
+          await this._acceptPendingEdit(message.editId);
+          break;
+        case 'rejectEdit':
+          this._rejectPendingEdit(message.editId);
           break;
         case 'newConversation':
           this.conversationHistory = [];
@@ -812,6 +822,108 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
     }
 
     return summary;
+  }
+
+  private async _reviewFileEdits(edits: ParsedFileEdit[]): Promise<void> {
+    const decoder = new TextDecoder();
+    let reviewCount = 0;
+
+    for (const edit of edits) {
+      try {
+        const uri = this._resolveEditUri(edit.path);
+        if (!uri) {
+          continue;
+        }
+
+        // Read the current file content (empty if doesn't exist)
+        let originalContent = '';
+        try {
+          const existingData = await vscode.workspace.fs.readFile(uri);
+          originalContent = decoder.decode(existingData);
+        } catch {
+          // File doesn't exist yet — original is empty
+        }
+
+        // Store pending edit
+        const editId = `${Date.now()}-${reviewCount}`;
+        this.pendingEdits.set(editId, { edit, originalContent });
+
+        // Create a virtual document for the proposed content
+        const proposedUri = vscode.Uri.parse(`untitled:${uri.fsPath}.proposed`);
+        const proposedDoc = await vscode.workspace.openTextDocument(proposedUri);
+        const proposedEditor = await vscode.window.showTextDocument(proposedDoc, { preview: true, preserveFocus: true });
+        await proposedEditor.edit((builder) => {
+          const fullRange = new vscode.Range(
+            proposedDoc.positionAt(0),
+            proposedDoc.positionAt(proposedDoc.getText().length)
+          );
+          builder.replace(fullRange, edit.content);
+        });
+
+        // Open the diff editor
+        const title = `Review: ${edit.path} (${editId})`;
+        await vscode.commands.executeCommand('vscode.diff', uri, proposedUri, title);
+        reviewCount++;
+
+        this._postMessage({
+          type: 'reviewOpened',
+          editId,
+          filePath: edit.path,
+        });
+      } catch {
+        // If diff fails (e.g. new file), offer to apply directly
+        await this._applyFileEdits([edit], false);
+      }
+    }
+
+    if (reviewCount > 0) {
+      vscode.window.showInformationMessage(
+        `PerplexiCode: Reviewing ${reviewCount} file${reviewCount > 1 ? 's' : ''}. Use Accept All / Reject All to finalize.`,
+        'Accept All', 'Reject All'
+      ).then((choice) => {
+        if (choice === 'Accept All') {
+          this._acceptAllPendingEdits();
+        } else if (choice === 'Reject All') {
+          this._rejectAllPendingEdits();
+        }
+      });
+    }
+  }
+
+  private async _acceptPendingEdit(editId: string): Promise<void> {
+    const pending = this.pendingEdits.get(editId);
+    if (!pending) {
+      return;
+    }
+
+    await this._applyFileEdits([pending.edit], false);
+    this.pendingEdits.delete(editId);
+    this._postMessage({ type: 'reviewResult', editId, accepted: true, filePath: pending.edit.path });
+  }
+
+  private _rejectPendingEdit(editId: string): void {
+    const pending = this.pendingEdits.get(editId);
+    if (!pending) {
+      return;
+    }
+
+    this.pendingEdits.delete(editId);
+    this._postMessage({ type: 'reviewResult', editId, accepted: false, filePath: pending.edit.path });
+  }
+
+  private async _acceptAllPendingEdits(): Promise<void> {
+    for (const [editId, pending] of this.pendingEdits) {
+      await this._applyFileEdits([pending.edit], false);
+      this._postMessage({ type: 'reviewResult', editId, accepted: true, filePath: pending.edit.path });
+    }
+    this.pendingEdits.clear();
+  }
+
+  private _rejectAllPendingEdits(): void {
+    for (const [editId, pending] of this.pendingEdits) {
+      this._postMessage({ type: 'reviewResult', editId, accepted: false, filePath: pending.edit.path });
+    }
+    this.pendingEdits.clear();
   }
 
   private _resolveEditUri(targetPath: string): vscode.Uri | undefined {
